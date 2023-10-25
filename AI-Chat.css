@@ -1,4 +1,46 @@
 .trigger {
+  background-color: #e6e6e6;
+  bottom: 15%;
+}
+.trigger p {
+ color: #000;
+}
+.top-area {
+  background: #00a4bd;
+}
+
+.chat-input {
+  background: #e6e6e6;
+}
+
+textarea {
+  font-family: "Inter"; 
+  color: black; 
+  font-size: 18px;
+}
+
+textarea::placeholder,
+textarea::-moz-placeholder,
+textarea::-webkit-input-placeholder,
+textarea::-ms-input-placeholder {
+  color: #454545;
+}
+
+.input-note,
+.message {
+  color: #fff;
+}
+
+.sidebar {
+  width: 400px;
+  background: #fff;
+  right: -400px;
+}
+
+
+
+
+.trigger {
   cursor: pointer !important;
   padding: 15px;
   color: #fff;
