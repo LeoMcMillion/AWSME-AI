@@ -41,7 +41,7 @@ document.addEventListener("DOMContentLoaded", function () {
   const chatWidth = 400;
   const presetBehavior = "You are a friendly AI assistance";
   const AIFirstGreeting = "Hey, how can I help you today";
-  const tableId =  "7166646;
+  const tableId =  "7166646";
   const awsmeId = "fIpPGLGI9RWLr7fH4P6Q51Q01qZ2";
 
   setTimeout(function() {
