@@ -37,7 +37,7 @@ document.addEventListener("DOMContentLoaded", function () {
   var tempDiv = document.createElement("div");
   tempDiv.innerHTML = chatHTML;
   document.body.appendChild(tempDiv.firstElementChild);
-  /*
+  
   const chatWidth = 400;
   const presetBehavior = "You are a friendly AI assistance";
   const AIFirstGreeting = "Hey, how can I help you today";
@@ -338,7 +338,7 @@ document.addEventListener("DOMContentLoaded", function () {
     }
     
     updateMetric("numTriggerViews");
-  }, 200) */
+  }, 200)
 });
 
 
