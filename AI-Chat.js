@@ -1,3 +1,4 @@
+console.log(test);
 const chatHTML = `<div class="awsme-ai-chat" style="z-index:1000; position: relative;">
   <div class="trigger">
     {% if module.text.show_emoji %}
