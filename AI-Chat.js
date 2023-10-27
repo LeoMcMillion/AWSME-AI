@@ -56,10 +56,10 @@ function awsmeAiChatModule() {
         background: ${chatBgCol};
       }
       .awsme-ai-chat .bot .profile {
-        background-image: url(${botImgUrl};
+        background-image: url(${botImgUrl});
       }
       .awsme-ai-chat .user .profile {
-        background-image: url(${visitorImgUrl};
+        background-image: url(${visitorImgUrl});
       }`;
   
   newStyleTag.textContent = dynamicAddedCSS;
