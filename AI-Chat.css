@@ -1,45 +1,9 @@
-.trigger {
-  background-color: #e6e6e6;
-  bottom: 15%;
+.chat-area::-webkit-scrollbar-thumb {
+  border-radius: 6px; 
 }
-.trigger p {
- color: #000;
+.chat-area::-webkit-scrollbar {
+  width: 8px; 
 }
-.top-area {
-  background: #00a4bd;
-}
-
-.chat-input {
-  background: #e6e6e6;
-}
-
-textarea {
-  font-family: "Inter"; 
-  color: black; 
-  font-size: 18px;
-}
-
-textarea::placeholder,
-textarea::-moz-placeholder,
-textarea::-webkit-input-placeholder,
-textarea::-ms-input-placeholder {
-  color: #454545;
-}
-
-.input-note,
-.message {
-  color: #fff;
-}
-
-.sidebar {
-  width: 400px;
-  background: #fff;
-  right: -400px;
-}
-
-
-
-
 .trigger {
   cursor: pointer !important;
   padding: 15px;
@@ -49,6 +13,7 @@ textarea::-ms-input-placeholder {
   -webkit-border-radius: 5px 0 0 5px;
   border-radius: 5px 0 0 5px;
   max-width: 200px;
+  top: 50%;
 }
 
 @keyframes wave-animation {
@@ -82,6 +47,8 @@ textarea::-ms-input-placeholder {
   transition: right 0.3s ease-in-out;
   -webkit-box-shadow: -10px 0 10px 0 rgba(0,0,0,0.1);
   box-shadow: -10px 0 10px 0 rgba(0,0,0,0.1);
+  width: 580px;
+  right: -580px;
 }
 
 
@@ -150,7 +117,9 @@ textarea::-ms-input-placeholder {
   max-height: 200px;
   min-height: 20px !important;
   resize: none;  
-  overflow-y: hidden; 
+  overflow-y: hidden;
+  font-family: "Source Sans Pro";
+  font-size: 20px;
 }
 
 
@@ -276,7 +245,6 @@ textarea::-ms-input-placeholder {
     transform: scale(1.05);
   }
 }
-
 
 @media (max-width: 575px) {
   .trigger {display: none;} 
