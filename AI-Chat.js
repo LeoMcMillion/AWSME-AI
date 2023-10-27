@@ -401,9 +401,9 @@ function awsmeAiChatModule() {
       updateMetric("numTriggerViews");
     }, 200)
   });
-};
+}
 
-function awsmeAiChatModule();
+awsmeAiChatModule();
   
          
   
