@@ -1,4 +1,3 @@
-console.log(test);
 const chatHTML = `<div class="awsme-ai-chat" style="z-index:1000; position: relative;">
   <div class="trigger">
     {% if module.text.show_emoji %}
@@ -43,7 +42,7 @@ document.addEventListener("DOMContentLoaded", function () {
   const presetBehavior = "You are a friendly AI assistance";
   const AIFirstGreeting = "Hey, how can I help you today";
   const tableId =  "7166646";
-  const awsmeId = "fIpPGLGI9RWLr7fH4P6Q51Q01qZ2";
+  const awsmeId = "OlO8ZdelKAQZaQ0NksfDYUgtWg22";
 
   setTimeout(function() {
     const triggerButton = document.querySelector('.trigger');
