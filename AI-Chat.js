@@ -7,7 +7,6 @@ function awsmeAiChatModule() {
   const triggerLabel = chatSettings_625791["triggerLabel"];
   const headline = chatSettings_625791["headline"];
   const paragraph = chatSettings_625791["paragraph"];
-  const tableId =  "7166646";
   
   // Styling 
   const botImgUrl = chatSettings_625791["botImg"];
@@ -206,7 +205,6 @@ function awsmeAiChatModule() {
           },
           body: JSON.stringify({
             messages: conversation,
-            table: tableId,
             company: awsmeId
           }),
         })
@@ -215,8 +213,8 @@ function awsmeAiChatModule() {
         response = JSON.parse(response);
       
         const message = response.response;
-        const new_row = response.row;
-        reviews.push(new_row);
+        const new_ref = response.ref;
+        reviews.push(new_ref);
         conversation += `{assistant: ${message}}`;
       
         return message;
@@ -224,7 +222,7 @@ function awsmeAiChatModule() {
       
       
       // Response review saving
-      async function updateReviews(score, rowId) {
+      async function updateReviews(rating, responseRef) {
         updateMetric("numRatings");
         response = await fetch('https://teckon.se/api/reviews/', {
           method: 'POST',
@@ -232,9 +230,8 @@ function awsmeAiChatModule() {
             'Content-Type': 'application/json',
           },
           body: JSON.stringify({
-            row: rowId,
-            score: score,
-            table: tableId,
+            ref: responseRef,
+            rating: rating,
             company: awsmeId
           }),
         })
@@ -250,9 +247,9 @@ function awsmeAiChatModule() {
           element.addEventListener("click", function() {
             var score = "Good";
             var parentClasses = element.parentElement.parentElement.parentElement.className.split(" ");
-            var row_index = parseInt(parentClasses[1]);
-            var rowId = reviews[row_index][0];
-            updateReviews(score, rowId);
+            var refIndex = parseInt(parentClasses[1]);
+            var responseRef = reviews[refIndex];
+            updateReviews(score, responseRef);
             updateMetric("numThumbsUp");
           });
         });
@@ -260,9 +257,9 @@ function awsmeAiChatModule() {
           element.addEventListener("click", function() {
             var score = "Okay";
             var parentClasses = element.parentElement.parentElement.parentElement.className.split(" ");
-            var row_index = parseInt(parentClasses[1]);
-            var rowId = reviews[row_index][0];
-            updateReviews(score, rowId);
+            var refIndex = parseInt(parentClasses[1]);
+            var responseRef = reviews[refIndex];
+            updateReviews(score, responseRef);
             updateMetric("numThumbsNeutral");
           });
         });
@@ -270,9 +267,9 @@ function awsmeAiChatModule() {
           element.addEventListener("click", function() {
             var score = "Bad";
             var parentClasses = element.parentElement.parentElement.parentElement.className.split(" ");
-            var row_index = parseInt(parentClasses[1]);
-            var rowId = reviews[row_index][0];
-            updateReviews(score, rowId);
+            var refIndex = parseInt(parentClasses[1]);
+            var responseRef = reviews[refIndex];
+            updateReviews(score, responseRef);
             updateMetric("numThumbsDown");
           });
         });
@@ -390,7 +387,7 @@ function awsmeAiChatModule() {
           },
           body: JSON.stringify({
             metric: metricName,
-            file_name: awsmeId,
+            user_id: awsmeId,
           }),
         })
         response = await response.text();
