@@ -204,7 +204,7 @@ function awsmeAiChatModule() {
           },
           body: JSON.stringify({
             messages: conversation,
-            company: awsmeId
+            user_id: awsmeId
           }),
         })
       
@@ -231,7 +231,7 @@ function awsmeAiChatModule() {
           body: JSON.stringify({
             ref: responseRef,
             rating: rating,
-            company: awsmeId
+            user_id: awsmeId
           }),
         })
       
