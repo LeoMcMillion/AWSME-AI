@@ -3,7 +3,6 @@ function awsmeAiChatModule() {
   // Settings
   const awsmeId = chatSettings_625791["userId"];
   const AIFirstGreeting = chatSettings_625791["greetText"];
-  const presetBehavior = chatSettings_625791["systemPrompt"];
   const triggerLabel = chatSettings_625791["triggerLabel"];
   const headline = chatSettings_625791["headline"];
   const paragraph = chatSettings_625791["paragraph"];
