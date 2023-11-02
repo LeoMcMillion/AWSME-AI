@@ -64,7 +64,6 @@
   display: flex;
   flex-wrap: wrap;
   width: 100%;
-  background: #00A4BD;
   height: fit-content;
 }
 .close-x {
