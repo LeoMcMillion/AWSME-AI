@@ -194,7 +194,7 @@ function awsmeAiChatModule() {
       }
       
       let reviews = [];
-      let conversation = '{system: ' + presetBehavior + '}'
+      let conversation = '';
       async function getAIResponse(userMessage) {
         conversation += `{user: ${userMessage}}`
         response = await fetch('https://teckon.se/api/call/', {
