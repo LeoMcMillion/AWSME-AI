@@ -193,7 +193,8 @@ function awsmeAiChatModule() {
         return row;
       }
       
-      let reviews = [];
+      let reviewRefs = [];
+      let questionsAndAnswers = [];
       let conversation = '';
       async function getAIResponse(userMessage) {
         conversation += `{user: ${userMessage}}`
@@ -212,8 +213,8 @@ function awsmeAiChatModule() {
         response = JSON.parse(response);
       
         const message = response.response;
-        const new_ref = response.ref;
-        reviews.push(new_ref);
+        reviewRefs.push("");
+        questionsAndAnswers.push({"question": userMessage, "answer": message})
         conversation += `{assistant: ${message}}`;
       
         return message;
@@ -221,20 +222,51 @@ function awsmeAiChatModule() {
       
       
       // Response review saving
-      async function updateReviews(rating, responseRef) {
+      async function saveReview(rating, question, answer, reviewIndex) {
         updateMetric("numRatings");
-        response = await fetch('https://teckon.se/api/reviews/', {
+        if (rating == "Good") {
+          updateMetric("numThumbsUp");
+        }
+        else if (rating == "Okay") {
+          updateMetric("numThumbsNeutral");
+        }
+        else if (rating == "Bad") {
+          updateMetric("numThumbsDown");
+        }
+        
+        response = await fetch('https://teckon.se/api/save-review/', {
           method: 'POST',
           headers: {
             'Content-Type': 'application/json',
           },
           body: JSON.stringify({
-            ref: responseRef,
+            question: question,
+            answer: answer,
             rating: rating,
             user_id: awsmeId
           }),
         })
       
+        response = await response.text();
+        response = JSON.parse(response);
+        message = response.response;
+        ref = response.ref;
+        reviewRefs[reviewIndex] = ref;
+        console.log(message);
+      }
+
+      async function updateReview(rating, ref) {
+        response = await fetch('https://teckon.se/api/update-review/', {
+          method: 'POST',
+          headers: {
+            'Content-Type': 'application/json',
+          },
+          body: JSON.stringify({
+            ref: ref,
+            rating: rating,
+            user_id: awsmeId
+          }),
+        })
         response = await response.text();
         message = JSON.parse(response).response;
         console.log(message);
@@ -247,9 +279,13 @@ function awsmeAiChatModule() {
             var score = "Good";
             var parentClasses = element.parentElement.parentElement.parentElement.className.split(" ");
             var refIndex = parseInt(parentClasses[1]);
-            var responseRef = reviews[refIndex];
-            updateReviews(score, responseRef);
-            updateMetric("numThumbsUp");
+            var responseRef = reviewRefs[refIndex];
+            if (responseRef == "") {
+              saveReview(score, questionsAndAnswers[refIndex]["question"], questionsAndAnswers[refIndex]["answer"], refIndex)
+            }
+            else {
+              updateReview(score, responseRef);
+            }
           });
         });
         document.querySelectorAll(".neutral").forEach(function(element) {
@@ -257,9 +293,13 @@ function awsmeAiChatModule() {
             var score = "Okay";
             var parentClasses = element.parentElement.parentElement.parentElement.className.split(" ");
             var refIndex = parseInt(parentClasses[1]);
-            var responseRef = reviews[refIndex];
-            updateReviews(score, responseRef);
-            updateMetric("numThumbsNeutral");
+            var responseRef = reviewRefs[refIndex];
+            if (responseRef == "") {
+              saveReview(score, questionsAndAnswers[refIndex]["question"], questionsAndAnswers[refIndex]["answer"], refIndex)
+            }
+            else {
+              updateReview(score, responseRef);
+            }
           });
         });
         document.querySelectorAll(".thumbs-down").forEach(function(element) {
@@ -267,9 +307,13 @@ function awsmeAiChatModule() {
             var score = "Bad";
             var parentClasses = element.parentElement.parentElement.parentElement.className.split(" ");
             var refIndex = parseInt(parentClasses[1]);
-            var responseRef = reviews[refIndex];
-            updateReviews(score, responseRef);
-            updateMetric("numThumbsDown");
+            var responseRef = reviewRefs[refIndex];
+            if (responseRef == "") {
+              saveReview(score, questionsAndAnswers[refIndex]["question"], questionsAndAnswers[refIndex]["answer"], refIndex)
+            }
+            else {
+              updateReview(score, responseRef);
+            }
           });
         });
         // CHANGE LOOK OF ICONS ON CLICK
