@@ -198,7 +198,7 @@ function awsmeAiChatModule() {
       let conversation = '';
       async function getAIResponse(userMessage) {
         conversation += `{user: ${userMessage}}`
-        response = await fetch('https://teckon.se/api/call/', {
+        response = await fetch('https://awsme.co/api/call/', {
           method: 'POST',
           headers: {
             'Content-Type': 'application/json',
@@ -234,7 +234,7 @@ function awsmeAiChatModule() {
           updateMetric("numThumbsDown");
         }
         
-        response = await fetch('https://teckon.se/api/save-review/', {
+        response = await fetch('https://awsme.co/api/save-review/', {
           method: 'POST',
           headers: {
             'Content-Type': 'application/json',
@@ -256,7 +256,7 @@ function awsmeAiChatModule() {
       }
 
       async function updateReview(rating, ref) {
-        response = await fetch('https://teckon.se/api/update-review/', {
+        response = await fetch('https://awsme.co/api/update-review/', {
           method: 'POST',
           headers: {
             'Content-Type': 'application/json',
@@ -423,7 +423,7 @@ function awsmeAiChatModule() {
                 
       // UPDATE METRICS IN FIRESTORE
       async function updateMetric(metricName) {
-        response = await fetch('https://teckon.se/api/metric/', {
+        response = await fetch('https://awsme.co/api/metric/', {
           method: 'POST',
           headers: {
             'Content-Type': 'application/json',
