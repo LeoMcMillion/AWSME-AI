@@ -178,36 +178,10 @@ function awsmeAiChatModule() {
                     <div class="message-col">
                       <p class="message" id=${id}>${text}</p> 
                       <div class="review-options">
-                        <div class="thumbs-up">
-                        <span class="fa-light">
-                            {% icon
-                              name="{{ module.style.icons.thumbs_up.name }}"
-                              style="{{ module.style.icons.thumbs_up.type }}"
-                              unicode="{{ module.style.icons.thumbs_up.unicode }}"
-                              icon_set="{{ module.style.icons.thumbs_up.icon_set }}"
-                            %}
-                          <span>
-                        </div>
-                        <div class="neutral">
-                          <span class="fa-light">
-                            {% icon
-                              name="{{ module.style.icons.neutral.name }}"
-                              style="{{ module.style.icons.neutral.type }}"
-                              unicode="{{ module.style.icons.neutral.unicode }}"
-                              icon_set="{{ module.style.icons.neutral.icon_set }}"
-                            %}
-                          </span>
-                        </div>
-                        <div class="thumbs-down">
-                          <span class="fa-light">
-                            {% icon
-                              name="{{ module.style.icons.icon_field.name }}"
-                              style="{{ module.style.icons.icon_field.type }}"
-                              unicode="{{ module.style.icons.icon_field.unicode }}"
-                              icon_set="{{ module.style.icons.icon_field.icon_set }}"
-                            %}
-                          </span>
-                        </div>
+                        <div class="thumbs-up"><i class="fa-light fa-thumbs-up"></i></div>
+                        <div class="neutral"><i class="fa-light fa-face-meh"></i></div>
+                        <div class="thumbs-down"><i class="fa-light fa-thumbs-down"></i></div>
+                      </div>
                     </div>
                   </div>
                 </div>`;
