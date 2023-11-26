@@ -1,9 +1,3 @@
-.chat-area::-webkit-scrollbar-thumb {
-  border-radius: 6px; 
-}
-.chat-area::-webkit-scrollbar {
-  width: 8px; 
-}
 .trigger {
   cursor: pointer !important;
   padding: 15px;
@@ -13,7 +7,6 @@
   -webkit-border-radius: 5px 0 0 5px;
   border-radius: 5px 0 0 5px;
   max-width: 200px;
-  top: 50%;
 }
 
 @keyframes wave-animation {
@@ -47,8 +40,7 @@
   transition: right 0.3s ease-in-out;
   -webkit-box-shadow: -10px 0 10px 0 rgba(0,0,0,0.1);
   box-shadow: -10px 0 10px 0 rgba(0,0,0,0.1);
-  width: 580px;
-  right: -580px;
+  backdrop-filter: blur(10px);
 }
 
 
@@ -64,16 +56,21 @@
   display: flex;
   flex-wrap: wrap;
   width: 100%;
+  background: #00A4BD;
   height: fit-content;
 }
+
 .close-x {
   padding: 5px;
   width: 100%;
   display: flex;
   justify-content: right;
 }
-.close-x i {
+.close-x svg {
   cursor: pointer !important;
+  fill: #fff;
+  width: 20px;
+  right: 15px;
 }
 .sidebar-title {
   width: 100%;
@@ -116,15 +113,17 @@
   max-height: 200px;
   min-height: 20px !important;
   resize: none;  
-  overflow-y: hidden;
-  font-family: "Source Sans Pro";
-  font-size: 20px;
+  overflow-y: hidden; 
 }
 
 
 .send-icon {
   cursor: pointer;
   margin-left: 10px;
+}
+.send-icon svg {
+ width: 20px;
+  fill: #999;
 }
 .input-note {
   width: 100%;
@@ -146,6 +145,11 @@
   justify-content: right;
   margin-top: 5px;
 }
+
+.review-options svg {
+ width: 15px;
+  cursor: pointer;
+}
 .chat-row-wrapper .profile {
   flex: 0 0 40px; 
   padding: 5px; 
@@ -157,7 +161,6 @@
 .bot .profile {
   -webkit-border-radius: 20px;
   border-radius: 20px;
-  background-size: contain;
 }
 
 .message-col {
@@ -168,7 +171,8 @@
 }
 .message {
   overflow-x: hidden;
-  white-space: break-spaces;
+  display: flex;
+  flex-direction: column;
   flex: 1;       
   padding: 5px;   
   overflow-wrap: break-word; 
@@ -245,7 +249,17 @@
     transform: scale(1.05);
   }
 }
-
 @media (max-width: 575px) {
   .trigger {display: none;} 
+}
+
+
+.cta-callout {
+  padding: 15px 0; 
+  display: flex; width: 100%;
+  white-space: inherit;
+}
+
+.cta-callout-label {
+  font-weight: bold;
 }
