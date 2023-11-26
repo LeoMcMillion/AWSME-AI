@@ -66,7 +66,7 @@ function awsmeAiChatModule() {
   
    
   const chatHTML = `<div class="awsme-ai-chat" style="z-index:1000; position: relative;">
-    <div class="trigger">
+    <div class="trigger" style="bottom: 15%;">
         <span class="wave">👋</span> 
       <p style="margin-bottom: 0px;">
         ${triggerLabel}
