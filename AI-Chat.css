@@ -41,6 +41,8 @@
   -webkit-box-shadow: -10px 0 10px 0 rgba(0,0,0,0.1);
   box-shadow: -10px 0 10px 0 rgba(0,0,0,0.1);
   backdrop-filter: blur(10px);
+  width: 580px;
+  right: -580px;
 }
 
 
