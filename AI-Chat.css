@@ -163,6 +163,7 @@
 .bot .profile {
   -webkit-border-radius: 20px;
   border-radius: 20px;
+  background-size: contain;
 }
 
 .message-col {
