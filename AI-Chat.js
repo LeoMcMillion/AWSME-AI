@@ -109,10 +109,7 @@ function awsmeAiChatModule() {
     const closeButton = document.querySelector('.close-x');
     const sidebar = document.querySelector('.sidebar');
   
-    setTimeout(function() {
-      sidebar.style.right = '-' + chatWidth + 'px';
-      sidebar.style.width = chatWidth + 'px';
-      
+    setTimeout(function() {      
       firstClick = true;
       triggerButton.addEventListener('click', () => {
         sidebar.style.right = '0';
