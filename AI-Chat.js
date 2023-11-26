@@ -507,6 +507,14 @@ function awsmeAiChatModule() {
 
       updateMetric(user_metric="numTriggerViews");
     }, 200)
+
+    $(document).ready(function(){
+      $('textarea.user-input').on('input', function() {
+        this.style.height = 'auto';
+        this.style.height = (this.scrollHeight) + 'px';
+      });
+    });
+
   });
 }
 
