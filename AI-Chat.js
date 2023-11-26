@@ -102,6 +102,12 @@ function awsmeAiChatModule() {
     var tempDiv = document.createElement("div");
     tempDiv.innerHTML = chatHTML;
     document.body.appendChild(tempDiv.firstElementChild);
+    
+    const chatWidth = 580;
+    const triggerButton = document.querySelector('.trigger');
+    const sendButton = document.querySelector('.send-icon');
+    const closeButton = document.querySelector('.close-x');
+    const sidebar = document.querySelector('.sidebar');
   
     setTimeout(function() {
       firstClick = true;
