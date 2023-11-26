@@ -1,7 +1,8 @@
+
+const awsmeId = chatSettings_625791["userId"];
 function awsmeAiChatModule() {
   // ------ Passed variables --------
   // Settings
-  const awsmeId = chatSettings_625791["userId"];
   const AIFirstGreeting = chatSettings_625791["greetText"];
   const triggerLabel = chatSettings_625791["triggerLabel"];
   const headline = chatSettings_625791["headline"];
@@ -19,7 +20,7 @@ function awsmeAiChatModule() {
   const inputBgCol = chatSettings_625791["inputBgCol"];
   const inputTextCol = chatSettings_625791["inputTextCol"];
   // -------------------------
-  
+
   
   // Applying dynamic style here
   var newStyleTag = document.createElement('style');
@@ -103,26 +104,20 @@ function awsmeAiChatModule() {
     document.body.appendChild(tempDiv.firstElementChild);
   
     setTimeout(function() {
-      const chatWidth = 580;
-      const triggerButton = document.querySelector('.trigger');
-      const sendButton = document.querySelector('.send-icon');
-      const closeButton = document.querySelector('.close-x i');
-      const sidebar = document.querySelector('.sidebar');
-      
       firstClick = true;
       triggerButton.addEventListener('click', () => {
         sidebar.style.right = '0';
         document.querySelector(".user-input").focus();
         if (firstClick) {
-          updateMetric("numTriggerClicks");
+          updateMetric(user_metric="numTriggerClicks");
           firstClick = false;
         }
       });
       closeButton.addEventListener('click', () => {
         sidebar.style.right = '-' + chatWidth + 'px';
       });
-      
-      
+
+
       // AI loader indicator HTML template
       function loaderIndicatorGen() {
         loader = `<div class="typing-indicator">
@@ -132,37 +127,39 @@ function awsmeAiChatModule() {
                   </div>`
         return loader;
       }
-      
+
       // AI RESPONSE AND CHAT LOGIC
       const userInput = document.querySelector(".user-input");
       const messageArea = document.querySelector(".chat-area"); // Where messages will be displayed
-      
+
       // AI write functionality
-      function AITextGen(element, text) {
-          index = 0;
-          interval = setInterval(() => {
-              if (index < text.length){
-                  element.innerText += text.charAt(index);
-                  index++;
-                
-                  if (index % 25 == 0) {
-                    messageArea.scrollTop = messageArea.scrollHeight;
-                  }
-              }
-              else {
-                  clearInterval(interval)
-              }
-          }, 20)
+      function AITextGen(element, textList) {
+        index = 0;
+        interval = setInterval(() => {
+            if (index < textList.length) {
+            element.innerHTML += textList[index];
+            if (index % 25 == 0) {
+                messageArea.scrollTop = messageArea.scrollHeight;
+            }
+            index++;
+            }
+            else {
+              setTimeout(function() {
+                messageArea.scrollTop = messageArea.scrollHeight;
+              }, 200);
+              clearInterval(interval);
+            }
+        }, 20)
         waiting = false
       }
-      
+
       // Generat unique id
       function generateUniqueId() {
         timeStamp = Date.now();
         randomNumber = Math.floor(Math.random() * 1000000).toString();
         return `id-${timeStamp}-${randomNumber}`;
       }
-      
+
       // generate response row
       function responseRowGen(isAI, text, id, showReview) {
         let row;
@@ -175,11 +172,38 @@ function awsmeAiChatModule() {
                     <div class="message-col">
                       <p class="message" id=${id}>${text}</p> 
                       <div class="review-options">
-                        <div class="thumbs-up"><i class="fa-light fa-thumbs-up"></i></div>
-                        <div class="neutral"><i class="fa-light fa-face-meh"></i></div>
-                        <div class="thumbs-down"><i class="fa-light fa-thumbs-down"></i></div>
-                      </div>
+                        <div class="thumbs-up">
+                        <span class="fa-light">
+                            {% icon
+                              name="{{ module.style.icons.thumbs_up.name }}"
+                              style="{{ module.style.icons.thumbs_up.type }}"
+                              unicode="{{ module.style.icons.thumbs_up.unicode }}"
+                              icon_set="{{ module.style.icons.thumbs_up.icon_set }}"
+                            %}
+                          <span>
+                        </div>
+                        <div class="neutral">
+                          <span class="fa-light">
+                            {% icon
+                              name="{{ module.style.icons.neutral.name }}"
+                              style="{{ module.style.icons.neutral.type }}"
+                              unicode="{{ module.style.icons.neutral.unicode }}"
+                              icon_set="{{ module.style.icons.neutral.icon_set }}"
+                            %}
+                          </span>
+                        </div>
+                        <div class="thumbs-down">
+                          <span class="fa-light">
+                            {% icon
+                              name="{{ module.style.icons.icon_field.name }}"
+                              style="{{ module.style.icons.icon_field.type }}"
+                              unicode="{{ module.style.icons.icon_field.unicode }}"
+                              icon_set="{{ module.style.icons.icon_field.icon_set }}"
+                            %}
+                          </span>
+                        </div>
                     </div>
+                  </div>
                 </div>`;
         } 
         else {
@@ -188,52 +212,102 @@ function awsmeAiChatModule() {
                         ${isAI ? "": ""}
                     </div>
                     <p class="message" id=${id}>${text}</p>
-                </div>`;
+                  </div>`;
         }
         return row;
       }
       
+      function responseHTMLModifier(string, className, action_data) {
+        action_id = action_data[0]
+        stringList = string.split("");
+        if (action_id.length == 20) {
+          action_url = action_data[1]
+          action_cta = action_data[2]
+          updateMetric(userMetric="", subcollection="actions", sub_doc_ref=action_id, sub_metric="views")
+          
+          ctaHTML = `<a class="${className} cta-callout" href="${action_url}" target="_blank"onclick="updateMetric(userMetric='', subcollection='actions', sub_doc_ref='${action_id}', sub_metric='clicks')">
+            <span class="cta-callout-label">${action_cta}</span>
+            </a>`
+          stringList.push(ctaHTML);
+        }
+        return stringList;
+      }
+
+      let conversation = "";
       let reviewRefs = [];
       let questionsAndAnswers = [];
-      let conversation = '';
       async function getAIResponse(userMessage) {
-        conversation += `{user: ${userMessage}}`
+        userMessage = userMessage.replace("{", "");
+        userMessage = userMessage.replace("}", "");
+        
+        let lead_stage = localStorage.getItem('lead_stage') != null ? localStorage.getItem('lead_stage'): "";
+        let lead_ref = localStorage.getItem('lead_ref') != null ? localStorage.getItem('lead_ref'): "";
+        
+        newMessage = `{user: ${userMessage}}`;
+
+        while (conversation.length + newMessage.length > 3000) {
+            conversation = conversation.substring(conversation.indexOf('}') + 1).trim();
+        }
+        conversation += newMessage;
+
+        if (firstEngagement) {
+            new_session = true;
+        }
+        else {
+            new_session = false;
+        }
+
         response = await fetch('https://awsme.co/api/call/', {
-          method: 'POST',
-          headers: {
-            'Content-Type': 'application/json',
-          },
-          body: JSON.stringify({
-            messages: conversation,
-            user_id: awsmeId
-          }),
+            method: 'POST',
+            headers: {
+                'Content-Type': 'application/json',
+            },
+            body: JSON.stringify({
+                messages: conversation,
+                user_id: awsmeId,
+                lead_stage: lead_stage,
+                lead_ref: lead_ref,
+                new_session: new_session
+            }),
         })
-      
+
         response = await response.text();
         response = JSON.parse(response);
-      
-        const message = response.response;
+
+        action_data = response.action_data;
+        lead_stage = response.lead_stage;
+        lead_ref = response.lead_ref;
+
+        localStorage.setItem('lead_stage', lead_stage)
+        if (lead_ref.length > 0) {
+          localStorage.setItem('lead_ref', lead_ref)
+        }
+
+        message = response.response;
+        message = message.replace("{", "");
+        message = message.replace("}", "");
+
         reviewRefs.push("");
         questionsAndAnswers.push({"question": userMessage, "answer": message})
         conversation += `{assistant: ${message}}`;
-      
-        return message;
+
+        return [message, action_data];
       }
-      
-      
+
+
       // Response review saving
       async function saveReview(rating, question, answer, reviewIndex) {
-        updateMetric("numRatings");
+        updateMetric(user_metric="numRatings");
         if (rating == "Good") {
-          updateMetric("numThumbsUp");
+          updateMetric(user_metric="numThumbsUp");
         }
         else if (rating == "Okay") {
-          updateMetric("numThumbsNeutral");
+          updateMetric(user_metric="numThumbsNeutral");
         }
         else if (rating == "Bad") {
-          updateMetric("numThumbsDown");
+          updateMetric(user_metric="numThumbsDown");
         }
-        
+
         response = await fetch('https://awsme.co/api/save-review/', {
           method: 'POST',
           headers: {
@@ -246,7 +320,7 @@ function awsmeAiChatModule() {
             user_id: awsmeId
           }),
         })
-      
+
         response = await response.text();
         response = JSON.parse(response);
         message = response.response;
@@ -271,7 +345,7 @@ function awsmeAiChatModule() {
         message = JSON.parse(response).response;
         console.log(message);
       }
-      
+
       function updateClickEvents() {
         // UPDATE HUBDB WHEN ICON IS PRESSED
         document.querySelectorAll(".thumbs-up").forEach(function(element) {
@@ -322,17 +396,17 @@ function awsmeAiChatModule() {
           element.addEventListener('click', function() {
             var icons = element.parentElement.children;
             for (var i = 0; i < icons.length; i++) {
-              var icon = icons[i].querySelector("i");
+              var icon = icons[i].querySelector("span");
               icon.classList.remove('fa-solid');
               icon.classList.add('fa-light');
             }
-            icon = element.querySelector("i");
+            icon = element.querySelector("span");
             icon.classList.remove('fa-light');
             icon.classList.add('fa-solid');
           });
         });
       }
-      
+
       // Event listener for user input submission
       let lastEnterTimestamp = 0;
       let isLongDelay = true;
@@ -340,7 +414,7 @@ function awsmeAiChatModule() {
       userInput.addEventListener("keydown", function(event) {
         if (event.key === "Enter" && event.shiftKey && !waiting) {
           const currentTime = Date.now();
-      
+
           if (isLongDelay || currentTime - lastEnterTimestamp > 300) {
             if (isLongDelay) {
               isLongDelay = false;
@@ -348,9 +422,9 @@ function awsmeAiChatModule() {
                 isLongDelay = true;
               }, 1000); // Change this delay for the initial long delay
             }
-      
+
             lastEnterTimestamp = currentTime;
-      
+
             event.preventDefault(); // Prevent sending the message
             cursorPosition = userInput.selectionStart; // Get the cursor position
             textBeforeCursor = userInput.value.substring(0, cursorPosition);
@@ -366,84 +440,90 @@ function awsmeAiChatModule() {
           submit();
         }
       });
-      
+
       sendButton.onclick = () => {
         waiting = true;
         document.querySelector(".user-input").focus();
         submit();
       }
-      
+
       firstEngagement = true;
       async function submit() {
-        if (firstEngagement) {
-          firstEngagement = false;
-          updateMetric("numEngagements");
-        }
-        updateMetric("numResponses");
-        
         inputText = userInput.value;
         userInput.value = "";
-      
+
         // User chat row
         messageArea.innerHTML += responseRowGen(false, inputText, "", false)
-      
+
         uniqueId = generateUniqueId();
         // Ai chat row
         messageArea.innerHTML += responseRowGen(true, "", uniqueId, true)
         messageArea.scrollTop = messageArea.scrollHeight;
-      
+
         // Add loading indicator
         responseDiv = document.querySelector(`#${uniqueId}`);
         responseParent = responseDiv.parentNode;
         responseParent.innerHTML += loaderIndicatorGen();
-      
+
         // Wait for AI response
-        aiResponse = await getAIResponse(inputText);
-      
+        [aiResponse, action_data] = await getAIResponse(inputText);
+
         // Remove load indicator
         responseParent.querySelector(".typing-indicator").remove()
-      
+
         // Write out AI response
         responseDiv = document.querySelector(`#${uniqueId}`);
+
+        // Modify AI response string to instead have html elements in it
+        actionElementClass = generateUniqueId();
+        aiResponseList = responseHTMLModifier(aiResponse, actionElementClass, action_data);
+
         if (aiResponse) {
-          AITextGen(responseDiv, aiResponse)
+            AITextGen(responseDiv, aiResponseList)
         }
         else {
-          AITextGen(responseDiv, "Something went wrong, I couldn't answer. Try again")
+            AITextGen(responseDiv, "Something went wrong, I couldn't answer. Try again".split(''))
         }
+
         updateClickEvents();
-      }
-      
+        if (firstEngagement) {
+            firstEngagement = false;
+            updateMetric(user_metric="numEngagements");
+        }
+        updateMetric(user_metric="numResponses");
+    }
+
       // First prompt from AI
       uniqueId = generateUniqueId();
       messageArea.innerHTML += responseRowGen(true, "", uniqueId, false)
       responseDiv = document.querySelector(`#${uniqueId}`);
       AITextGen(responseDiv, AIFirstGreeting)
-            
-                
-      // UPDATE METRICS IN FIRESTORE
-      async function updateMetric(metricName) {
-        response = await fetch('https://awsme.co/api/metric/', {
-          method: 'POST',
-          headers: {
-            'Content-Type': 'application/json',
-          },
-          body: JSON.stringify({
-            metric: metricName,
-            user_id: awsmeId,
-          }),
-        })
-        response = await response.text();
-        message = JSON.parse(response).response;
-        console.log(message);
-      }
-      
-      updateMetric("numTriggerViews");
+
+      updateMetric(user_metric="numTriggerViews");
     }, 200)
   });
 }
 
 awsmeAiChatModule();
-  
+
+// UPDATE METRICS IN FIRESTORE (Must be in global scope)
+async function updateMetric(user_metric="", subcollection="", sub_doc_ref="", sub_metric="") {
+  response = await fetch('https://awsme.co/api/metric/', {
+    method: 'POST',
+    headers: {
+      'Content-Type': 'application/json',
+    },
+    body: JSON.stringify({
+      user_id: awsmeId,
+      user_metric: user_metric,
+      subcollection: subcollection,
+      sub_doc_ref: sub_doc_ref,
+      sub_metric: sub_metric
+    }),
+  })
+  response = await response.text();
+  message = JSON.parse(response).response;
+  console.log(message);
+}
          
   
