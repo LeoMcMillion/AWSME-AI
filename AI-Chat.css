@@ -131,6 +131,7 @@
   min-height: 20px !important;
   resize: none;  
   overflow-y: hidden; 
+  width: 100%;
 }
 
 
